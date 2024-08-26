@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reddit Bot Dashboard</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+
+        h1, h2 {
+            text-align: center;
+            color: #0056b3;
+        }
+
+        .status, .logs, .config {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px 20px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        #start-bot {
+            background-color: #28A745;
+            color: #fff;
+        }
+
+        #stop-bot {
+            background-color: #dc3545;
+            color: #fff;
+        }
+
+        button:disabled {
+            background-color: #aaa;
+            cursor: not-allowed;
+        }
+
+        .logs textarea {
+            width: 100%;
+            height: 150px;
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            resize: none;
+            font-family: monospace;
+            font-size: 0.9rem;
+        }
+
+        .config label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .config input, .config textarea {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .config button {
+            background-color: #007BFF;
+            color: #fff;
+        }
+        
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            border: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Reddit Bot Dashboard</h1>
+
+        <div class="status">
+            <h2>Status</h2>
+            <p id="status-text">Bot is not running</p>
+            <button id="start-bot" onclick="startBot()">Start Bot</button>
+            <button id="stop-bot" onclick="stopBot()" disabled>Stop Bot</button>
+        </div>
+
+        <div class="logs">
+            <h2>Activity Logs</h2>
+            <textarea id="log-output" readonly aria-label="Activity logs"></textarea>
+        </div>
+
+        <div class="config">
+            <h2>Configuration</h2>
+            <label for="subreddit">Subreddit:</label>
+            <input type="text" id="subreddit" placeholder="e.g., test" value="test" aria-labelledby="subreddit-label">
+
+            <label for="keyword">Keyword to search for:</label>
+            <input type="text" id="keyword" placeholder="e.g., sample user comment" value="sample user comment" aria-labelledby="keyword-label">
+
+            <label for="reply">Reply message:</label>
+            <textarea id="reply" placeholder="e.g., Hey, I like your comment!" aria-labelledby="reply-label">Hey, I like your comment!</textarea>
+
+            <button onclick="saveConfig()">Save Config</button>
+        </div>
+    </div>
+
+    <script>
+        function startBot() {
+            document.getElementById("status-text").textContent = "Bot is running...";
+            document.getElementById("start-bot").disabled = true;
+            document.getElementById("stop-bot").disabled = false;
+
+            logActivity("Bot started.");
+        }
+
+        function stopBot() {
+            document.getElementById("status-text").textContent = "Bot is not running";
+            document.getElementById("start-bot").disabled = false;
+            document.getElementById("stop-bot").disabled = true;
+
+            logActivity("Bot stopped.");
+        }
+
+        function logActivity(message) {
+            const logOutput = document.getElementById("log-output");
+            const currentTime = new Date().toLocaleTimeString();
+            logOutput.value += `[${currentTime}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+
+        function saveConfig() {
+            const subreddit = document.getElementById("subreddit").value;
+            const keyword = document.getElementById("keyword").value;
+            const reply = document.getElementById("reply").value;
+
+            logActivity(`Configuration saved: Subreddit - ${subreddit}, Keyword - ${keyword}, Reply - "${reply}"`);
+        }
+    </script>
+</body>
+</html>
+
